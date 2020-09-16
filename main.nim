@@ -30,13 +30,28 @@ routes:
     const data = $(%*{"message": "Hello, World!"})
     resp data, "application/json"
   
+  get "/explicitJsonFromSeq":
+
+    let test = @[
+      %*{
+        "message": "Hello, World!"
+      },
+      %*{
+        "message2": @[
+          %*{
+            "nested": "works",
+          }
+        ]
+      },
+    ] 
+    resp ($test).strip(chars={'@'}, leading=true), "application/json"
+  
   get "/implicitJSON":
-    let j = %*{
+    resp %*{
       "string": "string",
       "number": 1,
       "float": 1.33
     }
-    resp j
   
   # get re"^\/(.*)\.txt$":
   #   resp request.matches[0]
