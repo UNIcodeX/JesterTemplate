@@ -22,7 +22,7 @@ routes:
   get "/":
     resp templates.renderTemplate("index.html")
   
-  get re"^\/(.*)\.(?:html|txt|css|js|min\.js)$":
+  get re"^\/(.*)\.(?:html|txt|css|js|min\.js|jpg|png|bmp|svg|gif)$":
     if "templates" notin request.path:
       sendFile(request.path.strip(chars={'/'}, leading=true))
   
@@ -31,7 +31,6 @@ routes:
     resp data, "application/json"
   
   get "/explicitJsonFromSeq":
-
     let test = @[
       %*{
         "message": "Hello, World!"
