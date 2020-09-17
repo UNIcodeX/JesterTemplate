@@ -9,7 +9,13 @@ import asyncnet
 import asyncdispatch
 import nwt
 
-var templates = newNwt("templates/*.html") 
+var
+  tvTemplates {.threadvar.}: Nwt
+
+proc getTemplates(): Nwt =
+  if tvTemplates.isNil:                         # If thread local `tvTemplates` is Nil,
+    tvTemplates = newNwt("templates/*.html")    # initialize for the current thread,
+  return tvTemplates                            # and finally return it.
 
 settings:
   port = 8000.Port
@@ -20,7 +26,8 @@ settings:
 
 routes:
   get "/":
-    resp templates.renderTemplate("index.html")
+    let templates = getTemplates()              # Retrieve the thread local `tvTemplates`,
+    resp templates.renderTemplate("index.html") # and use it.
   
   get re"^\/(.*)\.(?:html|txt|css|js|min\.js|jpg|png|bmp|svg|gif)$":
     if "templates" notin request.path:
